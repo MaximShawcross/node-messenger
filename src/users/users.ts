@@ -1,7 +1,7 @@
-import express from "express";
+import express, { Router } from "express";
 // создание марщрута. доступ к ним осуществим через
 // /users/login, /users/register
-export const router = express.Router();
+export const router: Router = express.Router();
 
 router.post('/login', (req, res) => {
     res.send("login");
