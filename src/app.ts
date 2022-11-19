@@ -1,5 +1,7 @@
 import express, { Express, Request, Response, Router } from "express";
-import { Server } from "http"
+import { Server } from "http";
+
+import BaseController from "./common/base.controller";
 import LoggerService from "./logger/logger.service";
 import { router as userRouter } from "./users/users";
 
@@ -9,7 +11,7 @@ export default class App {
     private port: number = 8000;
     private logger: LoggerService;
     
-    constructor(logger: LoggerService) { 
+    constructor(logger: LoggerService, controller: BaseController) { 
         this.app = express();
         this.logger = new LoggerService();
     }
