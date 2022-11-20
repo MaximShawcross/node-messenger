@@ -11,7 +11,7 @@ export default abstract class BaseController {
         this._router = Router();
     }
 
-    get router() {
+    get router(): Router {
         return this._router;
     }
 
@@ -20,7 +20,7 @@ export default abstract class BaseController {
         return res.status(code).json(message)
     }
 
-    public ok<T>(res: Response, message: T): Response {
+    public ok<T>(res: Response, message: T) {
         return this.send<T>(res, 200 ,message);
     }
 
@@ -33,7 +33,7 @@ export default abstract class BaseController {
             this.logger.log(`${rout.method}: ${rout.path}`);
             const handler = rout.callback.bind(this);
             
-            this._router[rout.method](rout.path, rout.callback, handler);
+            this._router[rout.method](rout.path, handler);
         }
     }
 };

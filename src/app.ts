@@ -1,31 +1,32 @@
 import express, { Express, Request, Response, Router } from "express";
 import { Server } from "http";
 
-import BaseController from "./common/base.controller";
 import LoggerService from "./logger/logger.service";
-import { router as userRouter } from "./users/users";
+import UserController from "./users/users.controller";
 
 export default class App {
     private app: Express;
     private server: Server;
     private port: number = 8000;
     private logger: LoggerService;
+    private userController: UserController;
     
-    constructor(logger: LoggerService, controller: BaseController) { 
+    constructor(logger: LoggerService, userController: UserController) { 
         this.app = express();
-        this.logger = new LoggerService();
+        this.logger = logger;
+        this.userController = userController;
     }
-    
-    // run app method
-    public async init(): Promise<void> { 
+
+    useRoutes (): void {
+        this.app.use("/users", this.userController.router);
+    }
+
+     // run app method
+     public async init(): Promise<void> { 
+        this.useRoutes();
         this.server = this.app.listen(this.port);
-        this.useRoutes("/users", userRouter);
 
         this.logger.log(`server started on localhost:${this.port}`);
-    }
-
-    useRoutes (route: string, router: Router): void {
-        this.app.use(route, router);
     }
     
 };
