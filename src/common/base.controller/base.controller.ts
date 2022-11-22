@@ -1,12 +1,13 @@
 import { Router, Response } from "express";
 import "reflect-metadata";
 
-import { IControllerRoute } from "./route.interface";
-import { ILogger } from "../logger/logger.interface";
+import { IControllerRoute } from "../route.interface";
+import { ILogger } from "../../logger/logger.interface";
 import { injectable } from "inversify";
+import { IBaseController } from "./base.controller.interface";
 
 @injectable()
-export default abstract class BaseController {
+export default abstract class BaseController implements IBaseController {
     private readonly _router: Router;
 
     constructor(private logger: ILogger) {
@@ -22,7 +23,7 @@ export default abstract class BaseController {
         return res.status(code).json(message)
     }
 
-    public ok<T>(res: Response, message: T) {
+    public ok<T>(res: Response, message: T): Response {
         this.logger.log("success");
         return this.send<T>(res, 200 ,message);
     }
