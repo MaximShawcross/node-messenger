@@ -12,34 +12,33 @@ import { IExpeptionFilter } from "./errors/exeption.filter.interface";
 
 @injectable()
 export default class App {
-    private app: Express;
-    private server: Server;
-    private port: number = 8000;
-    
-    constructor(
-        @inject(TYPES.ILogger) private logger: ILogger, 
-        @inject(TYPES.UserController) private userController: UserController, 
-        @inject(TYPES.ExeptionFilter) private exeptionFilter: IExpeptionFilter
-    ) { 
-        this.app = express();
-    }
+	private app: Express;
+	private server: Server;
+	private port = 8000;
 
-    useRoutes (): void {
-        this.app.use("/users", this.userController.router);
-    }
+	constructor(
+		@inject(TYPES.ILogger) private logger: ILogger,
+		@inject(TYPES.UserController) private userController: UserController,
+		@inject(TYPES.ExeptionFilter) private exeptionFilter: IExpeptionFilter
+	) {
+		this.app = express();
+	}
 
-    useExeptionFilter() {
-        this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
-    }
-    
-     // run app method
-    public async init(): Promise<void> { 
-        this.server = this.app.listen(this.port);
+	useRoutes(): void {
+		this.app.use("/users", this.userController.router);
+	}
 
-        this.useRoutes();
-        this.useExeptionFilter();         
+	useExeptionFilter(): void {
+		this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
+	}
 
-        this.logger.log(`server started on localhost:${this.port}`);
-    }
-    
-};
+	// run app method
+	public async init(): Promise<void> {
+		this.server = this.app.listen(this.port);
+
+		this.useRoutes();
+		this.useExeptionFilter();
+
+		this.logger.log(`server started on localhost:${this.port}`);
+	}
+}
