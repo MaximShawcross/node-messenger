@@ -2,6 +2,7 @@ import { Server } from "http";
 
 import express, { Express, Request, Response, Router } from "express";
 import { injectable, inject } from "inversify";
+import { json } from "body-parser";
 import "reflect-metadata";
 
 import { TYPES } from "./types";
@@ -28,6 +29,10 @@ export default class App {
 		this.app.use("/users", this.userController.router);
 	}
 
+	useMiddleware(): void {
+		this.app.use(json());
+	}
+
 	useExeptionFilter(): void {
 		this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
 	}
@@ -35,7 +40,7 @@ export default class App {
 	// run app method
 	public async init(): Promise<void> {
 		this.server = this.app.listen(this.port);
-
+		this.useMiddleware();
 		this.useRoutes();
 		this.useExeptionFilter();
 

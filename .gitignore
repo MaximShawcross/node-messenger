@@ -1,5 +1,7 @@
 /node_modules
 /dist
-.eslintrc
-.prettierrc
 /.vscode
+/.clinic
+.prettierrc
+.eslintrc
+nodemon.json
