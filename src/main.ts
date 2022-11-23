@@ -8,12 +8,15 @@ import LoggerService from "./logger/logger.service";
 import { TYPES } from "./types";
 import UserController from "./users/users.controller";
 import { IUserController } from "./users/users.controller.interface";
+import UserService from "./users/users.service/users.service";
+import { IUserService } from "./users/users.service/users.service.interface";
 
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<App>(TYPES.Application).to(App);
 	bind<IExpeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
 	bind<ILogger>(TYPES.ILogger).to(LoggerService);
 	bind<IUserController>(TYPES.UserController).to(UserController);
+	bind<IUserService>(TYPES.IUserService).to(UserService);
 });
 
 function bootstrap(): { appContainer: Container; app: App } {
