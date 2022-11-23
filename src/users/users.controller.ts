@@ -13,6 +13,7 @@ import { TYPES } from "../types";
 import UserRegisterDto from "./dto/user-register.dto";
 import UserLoginDto from "./dto/user-login.dto";
 import HTTPError from "../errors/http-class.error";
+import ValidateMiddleware from "../common/validate.middlevare";
 
 @injectable()
 export default class UserController extends BaseController implements IUserController {
@@ -23,7 +24,12 @@ export default class UserController extends BaseController implements IUserContr
 		super(logger);
 		super.bindRoutes([
 			{ path: "/login", callback: this.login, method: "post" },
-			{ path: "/register", callback: this.register, method: "post" }
+			{
+				path: "/register",
+				callback: this.register,
+				method: "post",
+				middlewares: [new ValidateMiddleware(UserRegisterDto)]
+			}
 		]);
 	}
 

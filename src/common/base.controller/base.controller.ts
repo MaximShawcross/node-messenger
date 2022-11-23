@@ -33,11 +33,15 @@ export default abstract class BaseController implements IBaseController {
 	}
 
 	protected bindRoutes(routes: IControllerRoute[]): void {
-		for (const rout of routes) {
-			this.logger.log(`${rout.method}: ${rout.path}`);
-			const handler = rout.callback.bind(this);
+		for (const route of routes) {
+			this.logger.log(`${route.method}: ${route.path}`);
 
-			this._router[rout.method](rout.path, handler);
+			const middleware = route.middlewares?.map((m) => m.execute.bind(m));
+			const handler = route.callback.bind(this);
+
+			const pipeline = middleware ? [...middleware, handler] : handler;
+
+			this._router[route.method](route.path, pipeline);
 		}
 	}
 }
