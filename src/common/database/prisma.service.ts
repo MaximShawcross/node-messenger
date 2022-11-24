@@ -6,12 +6,16 @@ import { TYPES } from '../../types';
 
 @injectable()
 export default class PrismaService {
-	client: PrismaClient;
+	private _client: PrismaClient;
+	
+	public get client(): PrismaClient {
+		return this._client; 
+	}	
 	
 	constructor(
 		@inject(TYPES.Logger)private logger: ILogger
 	) {
-		this.client = new PrismaClient();
+		this._client = new PrismaClient();
 	}
 
 	public async connect(): Promise<void> {

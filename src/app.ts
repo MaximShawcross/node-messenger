@@ -8,9 +8,9 @@ import "reflect-metadata";
 import { TYPES } from "./types";
 import { ILogger } from "./logger/logger.interface";
 
-import UserController from "./users/users.controller";
+import UserController from "./users/users.controller/users.controller";
 import { IExpeptionFilter } from "./errors/exeption.filter.interface";
-import { IUserController } from "./users/users.controller.interface";
+import { IUserController } from "./users/users.controller/users.controller.interface";
 import { IConfigService } from "./config/config.service.interface";
 import PrismaService from "./common/database/prisma.service";
 
@@ -41,11 +41,7 @@ export default class App {
 	useExeptionFilter(): void {
 		this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
 	}
-	// useConfig(): void {
-	// 	this.app.use(() => {
-	// 		this.configService.get("KEY");
-	// 	});
-	// }
+
 	// run app method
 	public async init(): Promise<void> {
 		this.server = this.app.listen(this.port);
