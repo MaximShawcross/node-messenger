@@ -1,6 +1,7 @@
 // app entry point
 import { Container, ContainerModule, interfaces } from "inversify";
 import App from "./app";
+import PrismaService from "./common/database/prisma.service";
 import ConfigService from "./config/config.service";
 import { IConfigService } from "./config/config.service.interface";
 import ExeptionFilter from "./errors/exeption.filter";
@@ -14,12 +15,13 @@ import UserService from "./users/users.service/users.service";
 import { IUserService } from "./users/users.service/users.service.interface";
 
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
-	bind<App>(TYPES.Application).to(App);
 	bind<IExpeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
 	bind<ILogger>(TYPES.Logger).to(LoggerService).inSingletonScope();
 	bind<IUserController>(TYPES.UserController).to(UserController);
 	bind<IUserService>(TYPES.UserService).to(UserService);
 	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
+	bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
+	bind<App>(TYPES.Application).to(App);
 });
 
 function bootstrap(): { appContainer: Container; app: App } {
