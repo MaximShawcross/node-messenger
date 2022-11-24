@@ -5,9 +5,9 @@ export default class User {
 	private readonly _email: string;
 	private readonly _name: string;
 
-	constructor(email: string, password: string) {
+	constructor(email: string, name: string) {
 		this._email = email;
-		this._name = password;
+		this._name = name;
 	}
 
 	public get email(): string {
@@ -22,7 +22,7 @@ export default class User {
 		return this._password;
 	}
 
-	public async setPassword(pass: string): Promise<void> {
-		this._password = await hash(pass, 10);
+	public async setPassword(pass: string, salt: number): Promise<void> {
+		this._password = await hash(pass, salt);
 	}
 }

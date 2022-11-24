@@ -11,7 +11,7 @@ import HTTPError from "./http-class.error";
 
 @injectable()
 export default class ExeptionFilter implements IExpeptionFilter {
-	constructor(@inject(TYPES.ILogger) private logger: ILogger) {
+	constructor(@inject(TYPES.Logger) private logger: ILogger) {
 		this.logger = logger;
 	}
 

@@ -14,7 +14,7 @@ export default abstract class BaseController implements IBaseController {
 		this._router = Router();
 	}
 
-	get router(): Router {
+	public get router(): Router {
 		return this._router;
 	}
 

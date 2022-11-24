@@ -18,8 +18,8 @@ import ValidateMiddleware from "../common/validate.middlevare";
 @injectable()
 export default class UserController extends BaseController implements IUserController {
 	constructor(
-		@inject(TYPES.ILogger) logger: ILogger,
-		@inject(TYPES.IUserService) private userService: IUserService
+		@inject(TYPES.Logger) logger: ILogger,
+		@inject(TYPES.UserService) private userService: IUserService
 	) {
 		super(logger);
 		super.bindRoutes([
