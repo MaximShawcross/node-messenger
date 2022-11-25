@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import e, { Response, Request, NextFunction } from "express";
 import { inject, injectable } from "inversify";
 import "reflect-metadata";
@@ -23,7 +24,12 @@ export default class UserController extends BaseController implements IUserContr
 	) {
 		super(logger);
 		super.bindRoutes([
-			{ path: "/login", callback: this.login, method: "post" },
+			{ 
+				path: "/login", 
+				callback: this.login, 
+				method: "post",
+				middlewares: [new ValidateMiddleware(UserLoginDto)]
+			},
 			{
 				path: "/register",
 				callback: this.register,
@@ -33,10 +39,13 @@ export default class UserController extends BaseController implements IUserContr
 		]);
 	}
 
-	login({ body }: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
-		console.log(body); // JSON file from PUT or POST request
+	async login({ body }: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): Promise<void> {
+		const isUserExist = await this.userService.validateUser(body);
+		if ( !isUserExist ) {
+			return next(new HTTPError(401, "Wrong email or password!"));
+		}
+
 		this.ok(res, "login is successed!");
-		// next(new HTTPError(421, "ut", "login"))
 	}
 
 	async register(

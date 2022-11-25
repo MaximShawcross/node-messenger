@@ -1,13 +1,18 @@
-import { hash } from "bcryptjs";
+import { hash, compare } from "bcryptjs";
 
 export default class User {
 	private _password: string;
 	private readonly _email: string;
 	private readonly _name: string;
 
-	constructor(email: string, name: string) {
+	// eslint-disable-next-line prettier/prettier
+	constructor( name: string, email: string, passwordHash?: string ) {
 		this._email = email;
 		this._name = name;
+
+		if (passwordHash) {
+			this._password = passwordHash;
+		}
 	}
 
 	public get email(): string {
@@ -24,5 +29,9 @@ export default class User {
 
 	public async setPassword(pass: string, salt: number): Promise<void> {
 		this._password = await hash(pass, salt);
+	}
+
+	public async comparePassword(pass: string): Promise<boolean> {
+		return await compare(pass, this._password);
 	}
 }

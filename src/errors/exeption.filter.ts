@@ -17,7 +17,6 @@ export default class ExeptionFilter implements IExpeptionFilter {
 
 	catch(err: Error | HTTPError, req: Request, res: Response, next: NextFunction): void {
 		if (err instanceof HTTPError) {
-			console.log("httperror");
 			this.logger.error(`${err.context}: Error${err.statusCode} : ${err.message}`);
 			res.status(err.statusCode).send({ error: err.message });
 		} else {
