@@ -21,6 +21,15 @@ export default class UserService implements IUserService {
 		return this._user;
 	}
 
+	public async getUserInfo(email: string): Promise<UserModel | null> {
+		const existedUser = await this.usersRepository.find(email);
+		if (!existedUser) {
+			return null;
+		}
+
+		return existedUser;
+	}
+
 	public async createUser({ name, password, email }: userRegisterDto): Promise<UserModel | null> {
 		const user = new User(name, email);
 

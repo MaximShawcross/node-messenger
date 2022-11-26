@@ -17,6 +17,7 @@ import UserLoginDto from "../dto/user-login.dto";
 import HTTPError from "../../errors/http-class.error";
 import ValidateMiddleware from "../../common/validate.middleware";
 import { IConfigService } from "../../config/config.service.interface";
+import GuardMiddleware from "../../common/guard.middleware";
 
 @injectable()
 export default class UserController extends BaseController implements IUserController {
@@ -41,7 +42,8 @@ export default class UserController extends BaseController implements IUserContr
 			}, {
 				path: "/info",
 				callback: this.info,
-				method: "get"
+				method: "get",
+				middlewares: [new GuardMiddleware()]
 			},
 		]);
 	}
@@ -71,8 +73,12 @@ export default class UserController extends BaseController implements IUserContr
 		this.ok(res, { user: user.email });
 	}
 
-	info({ user }: Request, res: Response, next: NextFunction): void {
-		this.ok(res, { email: user });
+	async info({ user }: Request, res: Response, next: NextFunction): Promise<void> {
+		const existedUser = await this.userService.getUserInfo(user);
+
+		if (existedUser) {
+			this.ok(res, { email: existedUser.email, id: existedUser.id });
+		}
 	};
 
 	private signJWT(email: string, secret: string): Promise<string | Error> {

@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Request, Response, NextFunction } from "express";
 import { JwtPayload, verify } from "jsonwebtoken";
-import { iMiddleware } from "./middleware.interface";
+import { IMiddleware } from "./middleware.interface";
 
-export default class AuthMiddleware implements iMiddleware {
+export default class AuthMiddleware implements IMiddleware {
 	constructor(private secret: string) {}
 
 	execute(req: Request, res: Response, next: NextFunction): void {
@@ -20,7 +20,8 @@ export default class AuthMiddleware implements iMiddleware {
 					next();
 				}
 			});
+		} else {
+			next();
 		}
-		next();
 	}
 }
