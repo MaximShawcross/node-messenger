@@ -8,10 +8,12 @@ import "reflect-metadata";
 import { TYPES } from "./types";
 import { ILogger } from "./logger/logger.interface";
 
-import UserController from "./users/users.controller";
+import UserController from "./users/users.controller/users.controller";
 import { IExpeptionFilter } from "./errors/exeption.filter.interface";
-import { IUserController } from "./users/users.controller.interface";
+import { IUserController } from "./users/users.controller/users.controller.interface";
 import { IConfigService } from "./config/config.service.interface";
+import PrismaService from "./common/database/prisma.service";
+import AuthMiddleware from "./common/auth.middleware";
 
 @injectable()
 export default class App {
@@ -23,7 +25,8 @@ export default class App {
 		@inject(TYPES.Logger) private logger: ILogger,
 		@inject(TYPES.UserController) private userController: UserController,
 		@inject(TYPES.ExeptionFilter) private exeptionFilter: IExpeptionFilter,
-		@inject(TYPES.ConfigService) private configService: IConfigService
+		@inject(TYPES.ConfigService) private configService: IConfigService,
+		@inject(TYPES.PrismaService) private prismaService: PrismaService
 	) {
 		this.app = express();
 	}
@@ -34,21 +37,21 @@ export default class App {
 
 	useMiddleware(): void {
 		this.app.use(json());
+		const authMiddleware = new AuthMiddleware(this.configService.get("SECRET"));
+		this.app.use(authMiddleware.execute.bind(authMiddleware));
 	}
 
 	useExeptionFilter(): void {
 		this.app.use(this.exeptionFilter.catch.bind(this.exeptionFilter));
 	}
-	// useConfig(): void {
-	// 	this.app.use(() => {
-	// 		this.configService.get("KEY");
-	// 	});
-	// }
+
 	// run app method
 	public async init(): Promise<void> {
 		this.server = this.app.listen(this.port);
 		this.useMiddleware();
 		this.useRoutes();
+
+		await this.prismaService.connect();
 		// this.useConfig();
 		this.useExeptionFilter();
 

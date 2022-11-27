@@ -2,6 +2,9 @@
 /dist
 /.vscode
 /.clinic
+/prisma/dev.db
+/prisma/dev.db-journal
 .prettierrc
 .eslintrc
+.env
 nodemon.json
